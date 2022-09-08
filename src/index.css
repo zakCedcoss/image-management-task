@@ -9,12 +9,5 @@
 }
 
 .selection {
-    position :absolute;
-    right: 3%;
-    bottom: 3%;
-    width: 15px;
-    aspect-ratio: 1;
-    background-color: green;
-    border-radius: 50%;
-    box-shadow: 0 0 10px yellow;
+    opacity: 0.7;
 }

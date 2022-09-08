@@ -3,7 +3,6 @@ import "./App.css";
 import Modal from "./components/Modal";
 
 function App() {
-  const [holdSelection, setHoldSelection] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [images, setImages] = useState([]);
   const [selectedImages, setSelectedImages] = useState([]);
@@ -45,11 +44,13 @@ function App() {
         }
         return 0;
       });
+    } else {
+      filterImgs = images;
     }
     setImages(filterImgs);
   };
 
-  const handleIsSelected = (id) => {
+  const handleToggleSelection = (id) => {
     let isSelected = false;
     for (let selected of selectedImages) {
       if (selected === id) isSelected = true;
@@ -77,12 +78,21 @@ function App() {
   };
 
   const handleClick = (imgId) => {
-    let newImages = selectedImages.filter((img) => img.id !== imgId);
-    setSelectedImages([...newImages, imgId]);
-    setHoldSelection(!holdSelection);
+    let newImages = selectedImages.filter((img) => img !== imgId);
+    let isHere = false;
+    for (let select of selectedImages) {
+      if (imgId === select) isHere = true;
+    }
+
+    if (isHere) {
+      setSelectedImages(newImages);
+    } else {
+      setSelectedImages([...newImages, imgId]);
+    }
   };
 
   // console.log(images);
+  console.log(selectedImages);
 
   return (
     <div className="main">
@@ -113,14 +123,12 @@ function App() {
       <div className="img-container">
         {images.map((image) => {
           return (
-            <div className="wrapper" key={image.id}>
+            <div key={image.id} className="wrapper">
               <img
                 src={image.urls.small}
                 onClick={() => handleClick(image.id)}
+                className={handleToggleSelection(image.id) ? "selection" : ""}
               />
-              {holdSelection && handleIsSelected(image.id) && (
-                <div className="selection"></div>
-              )}
             </div>
           );
         })}
