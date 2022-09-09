@@ -9,8 +9,9 @@ function App() {
   const [selectedImages, setSelectedImages] = useState([]);
   const [isAllSelected, setIsAllSelected] = useState(false);
 
-  const unsplashApi =
-    "https://api.unsplash.com/search/photos?page=1&query=nature&client_id=pUMdKf_Knqnrm9YOuFpuKbiV5q6WgsAU3vbg5PEkTTA&per_page=30";
+  const page = Math.ceil(Math.random() * 334);
+
+  const unsplashApi = `https://api.unsplash.com/search/photos?page=${page}&query=nature&client_id=pUMdKf_Knqnrm9YOuFpuKbiV5q6WgsAU3vbg5PEkTTA&per_page=30`;
 
   useEffect(() => {
     fetch(unsplashApi)
@@ -22,7 +23,7 @@ function App() {
   }, []);
 
   // console.log("backup images", allImgs);
-  console.log("IMAGES", images);
+  // console.log("IMAGES", images);
 
   const handleSearch = (value) => {
     if (value === "") {
