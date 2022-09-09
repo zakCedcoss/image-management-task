@@ -29,7 +29,7 @@ function App() {
       setImages(allImgs);
       return;
     }
-    const searchedImgs = images.filter((img) => {
+    const searchedImgs = allImgs.filter((img) => {
       if (img.description !== null) {
         return img.description.indexOf(value) === -1 ? false : true;
       } else if (img.alt_description !== null) {
@@ -54,7 +54,7 @@ function App() {
         let bD = new Date(b.created_at);
         return aD - bD;
       });
-      setImages(filterImgs);
+      setImages([...filterImgs]);
     } else if (value === "description") {
       const filterImgs = images.sort((a, b) => {
         if (
@@ -71,8 +71,8 @@ function App() {
         }
         return 0;
       });
-      setImages(filterImgs);
-    } else {
+      setImages([...filterImgs]);
+    } else if (value === "none") {
       setImages(allImgs);
     }
   };
@@ -149,15 +149,17 @@ function App() {
           <button onClick={() => setIsModalOpen(true)}>Add</button>
         </div>
         <div className="filter">
+          <span style={{ marginRight: "0.5rem" }}> Sort By</span>
           <select name="filter" onChange={(e) => handleFilter(e.target.value)}>
-            <option value="none" selected={true}>
-              Sort By
-            </option>
+            <option value="none">Please select</option>
             <option value="date">Date</option>
             <option value="description">Description</option>
           </select>
         </div>
       </div>
+      <span style={{ textAlign: "left" }}>
+        Showing {images.length} image(s)
+      </span>
       <div className="img-container">
         {images.map((image) => {
           return (
@@ -167,6 +169,9 @@ function App() {
                 onClick={() => handleClick(image.id)}
                 className={handleToggleSelection(image.id) ? "selection" : ""}
               />
+              <div className="desc">
+                <p>{image?.description || image?.alt_description}</p>
+              </div>
             </div>
           );
         })}

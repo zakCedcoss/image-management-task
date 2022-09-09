@@ -31,7 +31,7 @@
 }
 
 .btns button,.filter select {
-    width: 100px;
+    width: 150px;
     outline: none;
     border: 1px solid black;
     padding: 0.3rem;
