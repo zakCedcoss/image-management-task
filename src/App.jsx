@@ -5,7 +5,9 @@ import Modal from "./components/Modal";
 function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [images, setImages] = useState([]);
+  const [allImgs, setAllImgs] = useState([]);
   const [selectedImages, setSelectedImages] = useState([]);
+  const [isAllSelected, setIsAllSelected] = useState(false);
 
   const unsplashApi =
     "https://api.unsplash.com/search/photos?page=1&query=nature&client_id=pUMdKf_Knqnrm9YOuFpuKbiV5q6WgsAU3vbg5PEkTTA&per_page=30";
@@ -15,8 +17,27 @@ function App() {
       .then((resp) => resp.json())
       .then((data) => {
         setImages(data.results);
+        setAllImgs(data.results);
       });
   }, []);
+
+  // console.log("backup images", allImgs);
+  console.log("IMAGES", images);
+
+  const handleSearch = (value) => {
+    if (value === "") {
+      setImages(allImgs);
+      return;
+    }
+    const searchedImgs = images.filter((img) => {
+      if (img.description !== null) {
+        return img.description.indexOf(value) === -1 ? false : true;
+      } else if (img.alt_description !== null) {
+        return img.alt_description.indexOf(value) === -1 ? false : true;
+      } else return false;
+    });
+    setImages(searchedImgs);
+  };
 
   const handleModalOpen = (value) => {
     setIsModalOpen(value);
@@ -27,27 +48,33 @@ function App() {
   };
 
   const handleFilter = (value) => {
-    let filterImgs = [];
     if (value === "date") {
-      filterImgs = images.sort((a, b) => {
+      const filterImgs = images.sort((a, b) => {
         let aD = new Date(a.created_at);
         let bD = new Date(b.created_at);
         return aD - bD;
       });
+      setImages(filterImgs);
     } else if (value === "description") {
-      filterImgs = images.sort((a, b) => {
-        if (a.description < b.description) {
+      const filterImgs = images.sort((a, b) => {
+        if (
+          (a.description || a.alt_description) <
+          (b.description || b.alt_description)
+        ) {
           return -1;
         }
-        if (a.description > b.description) {
+        if (
+          (a.description || a.alt_description) >
+          (b.description || b.alt_description)
+        ) {
           return 1;
         }
         return 0;
       });
+      setImages(filterImgs);
     } else {
-      filterImgs = images;
+      setImages(allImgs);
     }
-    setImages(filterImgs);
   };
 
   const handleToggleSelection = (id) => {
@@ -58,9 +85,15 @@ function App() {
     return isSelected;
   };
 
+  const handleDeselectAll = () => {
+    setSelectedImages([]);
+    setIsAllSelected(false);
+  };
+
   const handleSelectAll = () => {
     const all = images.map((img) => img.id);
     setSelectedImages(all);
+    setIsAllSelected(true);
   };
 
   const handleDelete = () => {
@@ -91,9 +124,6 @@ function App() {
     }
   };
 
-  // console.log(images);
-  console.log(selectedImages);
-
   return (
     <div className="main">
       {isModalOpen && (
@@ -103,10 +133,18 @@ function App() {
         />
       )}
       <h1>The Sea of Images</h1>
-      <input type="text" placeholder="Search images" />
+      <input
+        type="text"
+        placeholder="Search images"
+        onChange={(e) => handleSearch(e.target.value)}
+      />
       <div className="customise">
         <div className="btns">
-          <button onClick={handleSelectAll}>Select All</button>
+          {isAllSelected ? (
+            <button onClick={handleDeselectAll}>Deselect All</button>
+          ) : (
+            <button onClick={handleSelectAll}>Select All</button>
+          )}
           <button onClick={handleDelete}>Delete</button>
           <button onClick={() => setIsModalOpen(true)}>Add</button>
         </div>

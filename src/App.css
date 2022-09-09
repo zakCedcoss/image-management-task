@@ -57,7 +57,8 @@
 
 .modal {
     width: 500px;
-    height: 700px;
+    min-height: 100px;
+    max-height: 700px;
     position: absolute;
     top: 10%;
     left: 25%;
@@ -104,6 +105,7 @@
 
 .img-wrapper {
     width: 90%;
+    height: 100%;
     margin-inline:auto;
     display: grid;
     grid-template-columns: repeat(2,1fr);
