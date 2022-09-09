@@ -125,19 +125,19 @@ function App() {
   };
 
   const handlePrev = () => {
-    if (page < 1) {
+    if (page < 2) {
       setPage(1);
-      return;
+    } else {
+      setPage(page - 1);
     }
-    setPage(page - 1);
   };
 
   const handleNext = () => {
-    if (page > 334) {
-      setPage(334);
-      return;
-    }
+    // if (page > 336) {
+    //   setPage(334);
+    // } else {
     setPage(page + 1);
+    // }
   };
 
   return (
