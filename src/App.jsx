@@ -8,10 +8,9 @@ function App() {
   const [allImgs, setAllImgs] = useState([]);
   const [selectedImages, setSelectedImages] = useState([]);
   const [isAllSelected, setIsAllSelected] = useState(false);
+  const [page, setPage] = useState(1);
 
-  const page = Math.ceil(Math.random() * 334);
-
-  const unsplashApi = `https://api.unsplash.com/search/photos?page=${page}&query=nature&client_id=pUMdKf_Knqnrm9YOuFpuKbiV5q6WgsAU3vbg5PEkTTA&per_page=30`;
+  const unsplashApi = `https://api.unsplash.com/search/photos?page=${page}&query=nature&client_id=pUMdKf_Knqnrm9YOuFpuKbiV5q6WgsAU3vbg5PEkTTA&per_page=20`;
 
   useEffect(() => {
     fetch(unsplashApi)
@@ -20,7 +19,7 @@ function App() {
         setImages(data.results);
         setAllImgs(data.results);
       });
-  }, []);
+  }, [page]);
 
   // console.log("backup images", allImgs);
   // console.log("IMAGES", images);
@@ -125,6 +124,22 @@ function App() {
     }
   };
 
+  const handlePrev = () => {
+    if (page < 1) {
+      setPage(1);
+      return;
+    }
+    setPage(page - 1);
+  };
+
+  const handleNext = () => {
+    if (page > 334) {
+      setPage(334);
+      return;
+    }
+    setPage(page + 1);
+  };
+
   return (
     <div className="main">
       {isModalOpen && (
@@ -176,6 +191,13 @@ function App() {
             </div>
           );
         })}
+      </div>
+      <div className="pagination">
+        <h3 style={{ textDecoration: "underline" }}>On page {page}</h3>
+        <div className="page-btn">
+          <button onClick={handlePrev}>Prev</button>
+          <button onClick={handleNext}>Next</button>
+        </div>
       </div>
     </div>
   );
