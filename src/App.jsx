@@ -133,11 +133,7 @@ function App() {
   };
 
   const handleNext = () => {
-    // if (page > 336) {
-    //   setPage(334);
-    // } else {
     setPage(page + 1);
-    // }
   };
 
   return (
