@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./App.css";
+import Loader from "./components/Loader";
 import Modal from "./components/Modal";
 
 function App() {
@@ -9,6 +10,9 @@ function App() {
   const [selectedImages, setSelectedImages] = useState([]);
   const [isAllSelected, setIsAllSelected] = useState(false);
   const [page, setPage] = useState(1);
+  const [searchedText, setSearchedText] = useState("");
+  const [selectFilter, setSelectFilter] = useState("");
+  const [isFetching, setIsFetching] = useState(true);
 
   const unsplashApi = `https://api.unsplash.com/search/photos?page=${page}&query=nature&client_id=pUMdKf_Knqnrm9YOuFpuKbiV5q6WgsAU3vbg5PEkTTA&per_page=20`;
 
@@ -18,6 +22,7 @@ function App() {
       .then((data) => {
         setImages(data.results);
         setAllImgs(data.results);
+        setIsFetching(false);
       });
   }, [page]);
 
@@ -25,6 +30,7 @@ function App() {
   // console.log("IMAGES", images);
 
   const handleSearch = (value) => {
+    setSearchedText(value);
     if (value === "") {
       setImages(allImgs);
       return;
@@ -48,6 +54,7 @@ function App() {
   };
 
   const handleFilter = (value) => {
+    setSelectFilter(value);
     if (value === "date") {
       const filterImgs = images.sort((a, b) => {
         let aD = new Date(a.created_at);
@@ -56,17 +63,15 @@ function App() {
       });
       setImages([...filterImgs]);
     } else if (value === "description") {
-      const filterImgs = images.sort((a, b) => {
-        if (
-          (a.description?.toLowerCase() || a.alt_description?.toLowerCase()) <
-          (b.description?.toLowerCase() || b.alt_description?.toLowerCase())
-        ) {
+      let filterImgs = images.sort((a, b) => {
+        let aDesc =
+          a.description?.toLowerCase() || a.alt_description?.toLowerCase();
+        let bDesc =
+          b.description?.toLowerCase() || b.alt_description?.toLowerCase();
+
+        if (aDesc < bDesc) {
           return -1;
-        }
-        if (
-          (a.description?.toLowerCase() || a.alt_description?.toLowerCase()) >
-          (b.description?.toLowerCase() || b.alt_description?.toLowerCase())
-        ) {
+        } else if (aDesc > bDesc) {
           return 1;
         }
         return 0;
@@ -76,7 +81,7 @@ function App() {
       setImages(allImgs);
     }
   };
-
+  // console.log(selectFilter);
   const handleToggleSelection = (id) => {
     let isSelected = false;
     for (let selected of selectedImages) {
@@ -130,10 +135,30 @@ function App() {
     } else {
       setPage(page - 1);
     }
+    setSelectFilter("");
+    setIsFetching(true);
   };
 
   const handleNext = () => {
     setPage(page + 1);
+    setSelectFilter("");
+    setIsFetching(true);
+  };
+
+  const modifyDate = (date) => {
+    const year = new Date(date).getFullYear();
+    const month = new Date(date).getMonth();
+    const day = new Date(date).getDate();
+    return [day, month, year];
+  };
+
+  const modifyDescription = (desc) => {
+    if (!desc) return "NA";
+    if (desc?.length > 35) {
+      const newDesc = desc.slice(0, 35);
+      return newDesc + "...";
+    }
+    return desc;
   };
 
   return (
@@ -162,31 +187,57 @@ function App() {
         </div>
         <div className="filter">
           <span style={{ marginRight: "0.5rem" }}> Sort By</span>
-          <select name="filter" onChange={(e) => handleFilter(e.target.value)}>
+          <select
+            name="filter"
+            value={selectFilter}
+            onChange={(e) => handleFilter(e.target.value)}
+          >
             <option value="none">Please select</option>
             <option value="date">Date</option>
             <option value="description">Description</option>
           </select>
         </div>
       </div>
-      <span style={{ textAlign: "left" }}>
-        Showing {images.length} image(s)
-      </span>
+      {searchedText.length !== 0 && (
+        <span style={{ textAlign: "left" }}>
+          Showing {images.length} image(s)
+        </span>
+      )}
+      {/* {It is to test that Loader is showing or not} */}
+      {/* {We have to remove this pagination} */}
+      <div className="pagination">
+        <h3 style={{ textDecoration: "underline" }}>On page {page}</h3>
+        <div className="page-btn">
+          <button onClick={handlePrev}>Prev</button>
+          <button onClick={handleNext}>Next</button>
+        </div>
+      </div>
       <div className="img-container">
-        {images.map((image) => {
-          return (
-            <div key={image.id} className="wrapper">
-              <img
-                src={image.urls.small}
-                onClick={() => handleClick(image.id)}
-                className={handleToggleSelection(image.id) ? "selection" : ""}
-              />
-              <div className="desc">
-                <p>{image?.description || image?.alt_description}</p>
+        {isFetching && <Loader />}
+        {!isFetching &&
+          images.map((image) => {
+            return (
+              <div key={image.id} className="wrapper">
+                <img
+                  src={image.urls.small}
+                  onClick={() => handleClick(image.id)}
+                  className={handleToggleSelection(image.id) ? "selection" : ""}
+                />
+                <div className="desc">
+                  <p>
+                    <span style={{ fontWeight: " bold" }}>Description:</span>{" "}
+                    {modifyDescription(
+                      image?.description || image?.alt_description
+                    )}
+                  </p>
+                  <p>
+                    <span style={{ fontWeight: "bold" }}>Created At:</span>{" "}
+                    {modifyDate(image?.created_at).join("-")}
+                  </p>
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
       </div>
       <div className="pagination">
         <h3 style={{ textDecoration: "underline" }}>On page {page}</h3>
