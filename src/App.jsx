@@ -208,7 +208,7 @@ function App() {
       <div className="pagination">
         <h3 style={{ textDecoration: "underline" }}>On page {page}</h3>
         <div className="page-btn">
-          <button onClick={handlePrev}>Prev</button>
+          {page !== 1 && <button onClick={handlePrev}>Prev</button>}
           <button onClick={handleNext}>Next</button>
         </div>
       </div>
@@ -242,7 +242,7 @@ function App() {
       <div className="pagination">
         <h3 style={{ textDecoration: "underline" }}>On page {page}</h3>
         <div className="page-btn">
-          <button onClick={handlePrev}>Prev</button>
+          {page !== 1 && <button onClick={handlePrev}>Prev</button>}
           <button onClick={handleNext}>Next</button>
         </div>
       </div>
