@@ -156,9 +156,9 @@ function App() {
     if (!desc) return "NA";
     if (desc?.length > 35) {
       const newDesc = desc.slice(0, 35);
-      return newDesc;
+      return newDesc + "...";
     }
-    return desc;
+    return desc + "...";
   };
 
   return (
@@ -226,14 +226,14 @@ function App() {
                 <div className="desc">
                   <p>
                     <span style={{ fontWeight: " bold" }}>Description:</span>{" "}
-                    {modifyDescription(
-                      image?.description || image?.alt_description
-                    )}
                     <a
+                      style={{ color: "black" }}
                       href="#"
                       title={image?.description || image?.alt_description}
                     >
-                      ...
+                      {modifyDescription(
+                        image?.description || image?.alt_description
+                      )}
                     </a>
                   </p>
                   <p>
