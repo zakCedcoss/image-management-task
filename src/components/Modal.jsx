@@ -2,6 +2,7 @@ import { useState } from "react";
 
 function Modal({ handleSetImages, handleModalOpen }) {
   const [searchedImages, setSearchedImages] = useState([]);
+  const [searchedText, setSearchedText] = useState("");
 
   const searchApi =
     "https://api.unsplash.com/search/photos?client_id=pUMdKf_Knqnrm9YOuFpuKbiV5q6WgsAU3vbg5PEkTTA&query=";
@@ -12,6 +13,7 @@ function Modal({ handleSetImages, handleModalOpen }) {
   };
 
   const handleChange = (searchText) => {
+    setSearchedText(searchText);
     fetch(searchApi + searchText)
       .then((resp) => resp.json())
       .then((data) => setSearchedImages(data.results));
@@ -20,7 +22,11 @@ function Modal({ handleSetImages, handleModalOpen }) {
   return (
     <div className="modal">
       <div className="head">
-        <input type="text" onChange={(e) => handleChange(e.target.value)} />
+        <input
+          type="text"
+          value={searchedText}
+          onChange={(e) => handleChange(e.target.value)}
+        />
         <button className="close" onClick={() => handleModalOpen(false)}>
           Close
         </button>

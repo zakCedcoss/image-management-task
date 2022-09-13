@@ -97,6 +97,7 @@ background: radial-gradient(circle, #32b09e 35%, #61cb95 100%);
     background: none;
     width: 80%;
     padding: 0.5rem;
+    color: black;
     border: 1px solid black;
     border-radius: 10px;
 }
@@ -168,10 +169,26 @@ background: radial-gradient(circle, #32b09e 35%, #61cb95 100%);
         width: 85%;
         font-size: 0.8rem;
     }
+    .customise{
+        flex-direction: column;
+    }
+    .btns{
+        width: 90%;
+        margin-block: 1rem;
+    }
+    .pagination h3 {
+        font-size: 0.9rem;
+    }
+    .page-btn{
+        width: 70%;
+    }
+    .page-btn button{
+        font-size: 0.7rem;
+        margin-inline: 0.3rem;
+    }
 }
 
 .loader-container{
-    /* background: radial-gradient(circle, #32b09e 35%, #61cb95 100%); */
     width: 100%;
     aspect-ratio: 1;
     z-index: 1;
