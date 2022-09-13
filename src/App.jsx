@@ -156,7 +156,7 @@ function App() {
     if (!desc) return "NA";
     if (desc?.length > 35) {
       const newDesc = desc.slice(0, 35);
-      return newDesc + "...";
+      return newDesc;
     }
     return desc;
   };
@@ -229,6 +229,12 @@ function App() {
                     {modifyDescription(
                       image?.description || image?.alt_description
                     )}
+                    <a
+                      href="#"
+                      title={image?.description || image?.alt_description}
+                    >
+                      ...
+                    </a>
                   </p>
                   <p>
                     <span style={{ fontWeight: "bold" }}>Created At:</span>{" "}
