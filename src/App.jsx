@@ -58,14 +58,14 @@ function App() {
     } else if (value === "description") {
       const filterImgs = images.sort((a, b) => {
         if (
-          (a.description || a.alt_description) <
-          (b.description || b.alt_description)
+          (a.description?.toLowerCase() || a.alt_description?.toLowerCase()) <
+          (b.description?.toLowerCase() || b.alt_description?.toLowerCase())
         ) {
           return -1;
         }
         if (
-          (a.description || a.alt_description) >
-          (b.description || b.alt_description)
+          (a.description?.toLowerCase() || a.alt_description?.toLowerCase()) >
+          (b.description?.toLowerCase() || b.alt_description?.toLowerCase())
         ) {
           return 1;
         }
