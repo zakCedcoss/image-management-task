@@ -162,7 +162,7 @@ background: radial-gradient(circle, #32b09e 35%, #61cb95 100%);
         grid-template-columns: repeat(1,1fr);
     }
     .img-container img {
-        width: 85%;
+        width: 100%;
     }
 
     .desc {text-align: justify;
@@ -185,6 +185,14 @@ background: radial-gradient(circle, #32b09e 35%, #61cb95 100%);
     .page-btn button{
         font-size: 0.7rem;
         margin-inline: 0.3rem;
+    }
+    .modal {
+        width: 90%;
+        top: 5%;
+        left: 5%;
+    }
+    .modal input{
+        width: 70%;
     }
 }
 
